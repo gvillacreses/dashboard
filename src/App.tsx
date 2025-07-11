@@ -30,19 +30,19 @@ function App() {
       </Grid>
 
       {/* Indicadores */}
-      <Grid container size={{ xs: 12, md: 9 }} sx={{ display: {xs: 'none', md: 'block'} }}>
+      <Grid container size={{ xs: 12, md: 9 }}>
         Elemento: Indicadores
-        <Grid item xs={12} md={3}>
-          <IndicatorUI titulo="Temperatura (2m)" descripcion="XX°C" />
+         <Grid size={{ xs: 12, md: 3 }}>
+          <IndicatorUI title="Temperatura (2m)" description="XX°C" />
         </Grid>
-        <Grid item xs={12} md={3}>
-          <IndicatorUI titulo="Temperatura aparente" descripcion="YY°C" />
+         <Grid size={{ xs: 12, md: 3 }}>
+          <IndicatorUI title="Temperatura aparente" description="YY°C" />
         </Grid>
-        <Grid item xs={12} md={3}>
-          <IndicatorUI titulo="Velocidad del viento" descripcion="ZZkm/h" />
+         <Grid size={{ xs: 12, md: 3 }}>
+          <IndicatorUI title="Velocidad del viento" description="ZZkm/h" />
         </Grid>
-        <Grid item xs={12} md={3}>
-          <IndicatorUI titulo="Humedad relativa" descripcion="NN%" />
+         <Grid size={{ xs: 12, md: 3 }}>
+          <IndicatorUI title="Humedad relativa" description="NN%" />
         </Grid>
       </Grid>
 
