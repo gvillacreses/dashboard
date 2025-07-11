@@ -7,18 +7,14 @@ import IndicatorUI from './components/IndicatorUI'; // Importar el componente In
 import DataFetcher from './functions/DataFetcher'
 import TableUI from './components/TableUI';
 import ChartUI from './components/ChartUI';
+import { useState } from 'react';
 
 function App() {
-
-  const dataFetcherOutput = DataFetcher();
+  const [selectedCity, setSelectedCity] = useState('guayaquil');
+  const dataFetcherOutput = DataFetcher(selectedCity); // Modifica DataFetcher para aceptar ciudad
 
   return (
-    
-    
-
     <Grid container spacing={5} justifyContent="center" alignItems="center">
-
-      
 
       {/* Encabezado */}
       <Grid size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }}>
@@ -35,7 +31,7 @@ function App() {
       {/* Selector */}
       <Grid size={{ xs: 12, md: 3 }} sx={{ display: {xs: 'none', md: 'block'} }}>
         Elemento: Selector
-        <SelectorUI />
+        <SelectorUI onCityChange={setSelectedCity} />
       </Grid>
 
       {/* Indicadores */}
