@@ -1,22 +1,37 @@
 import { LineChart } from '@mui/x-charts/LineChart';
 import Typography from '@mui/material/Typography';
 
-const arrValues1 = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-const arrValues2 = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-const arrLabels = ['A','B','C','D','E','F','G'];
+type ChartUIProps = {
+   loading: boolean;
+   error: string | null;
+   data: any;
+};
 
+export default function ChartUI({ loading, error, data }: ChartUIProps) {
+   if (loading) {
+      return <p>Cargando datos...</p>;
+   }
+   if (error) {
+      return <p>Error: {error}</p>;
+   }
+   if (!data || !data.hourly) {
+      return <p>No hay datos disponibles.</p>;
+   }
 
-export default function ChartUI() {
+   const arrLabels = data.hourly.time;
+   const arrValues1 = data.hourly.temperature_2m;
+   const arrValues2 = data.hourly.apparent_temperature;
+
    return (
       <>
          <Typography variant="h5" component="div">
-            Chart arrLabels vs arrValues1 & arrValues2
+            Temperatura vs Temperatura aparente
          </Typography>
          <LineChart
             height={300}
             series={[
-               { data: arrValues1, label: 'value1'},
-               { data: arrValues2, label: 'value2'},
+               { data: arrValues1, label: 'Temperatura (2m)'},
+               { data: arrValues2, label: 'Temperatura aparente'},
             ]}
             xAxis={[{ scaleType: 'point', data: arrLabels }]}
          />

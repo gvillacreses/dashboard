@@ -1,6 +1,12 @@
 import Box from '@mui/material/Box';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 
+type TableUIProps = {
+   loading: boolean;
+   error: string | null;
+   data: any;
+};
+
 function combineArrays(arrLabels: Array<string>, arrValues1: Array<number>, arrValues2: Array<number>) {
    return arrLabels.map((label, index) => ({
       id: index,
@@ -12,21 +18,9 @@ function combineArrays(arrLabels: Array<string>, arrValues1: Array<number>, arrV
 
 const columns: GridColDef[] = [
    { field: 'id', headerName: 'ID', width: 90 },
-   {
-      field: 'label',
-      headerName: 'Label',
-      width: 150,
-   },
-   {
-      field: 'value1',
-      headerName: 'Value 1',
-      width: 150,
-   },
-   {
-      field: 'value2',
-      headerName: 'Value 2',
-      width: 150,
-   },
+   { field: 'label', headerName: 'Label', width: 150 },
+   { field: 'value1', headerName: 'Value 1', width: 150 },
+   { field: 'value2', headerName: 'Value 2', width: 150 },
    {
       field: 'resumen',
       headerName: 'Resumen',
@@ -38,12 +32,21 @@ const columns: GridColDef[] = [
    },
 ];
 
-const arrValues1 = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-const arrValues2 = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-const arrLabels = ['A','B','C','D','E','F','G'];
+export default function TableUI({ loading, error, data }: TableUIProps) {
+   if (loading) {
+      return <p>Cargando datos...</p>;
+   }
+   if (error) {
+      return <p>Error: {error}</p>;
+   }
+   if (!data || !data.hourly) {
+      return <p>No hay datos disponibles.</p>;
+   }
 
-export default function TableUI() {
-
+   // Usar datos de la API
+   const arrLabels = data.hourly.time || [];
+   const arrValues1 = data.hourly.temperature_2m || [];
+   const arrValues2 = data.hourly.apparent_temperature || [];
    const rows = combineArrays(arrLabels, arrValues1, arrValues2);
 
    return (

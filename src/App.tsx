@@ -96,12 +96,12 @@ function App() {
 
       {/* Gráfico */}
       <Grid size={{ xs: 12, md: 6 }} sx={{ display: {xs: 'none', md: 'block'} }}>
-        <ChartUI />
+        <ChartUI loading={dataFetcherOutput.loading} error={dataFetcherOutput.error} data={dataFetcherOutput.data} />
       </Grid>
 
       {/* Tabla */}
       <Grid size={{ xs: 12, md: 6 }} sx={{ display: {xs: 'none', md: 'block'} }}>
-        <TableUI />
+        <TableUI loading={dataFetcherOutput.loading} error={dataFetcherOutput.error} data={dataFetcherOutput.data} />
       </Grid>
 
       {/* Información adicional */}
