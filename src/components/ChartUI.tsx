@@ -38,3 +38,4 @@ export default function ChartUI({ loading, error, data }: ChartUIProps) {
       </>
    );
 }
+

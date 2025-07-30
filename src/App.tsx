@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import HeaderUI from './components/HeaderUI';
 import AlertUI from './components/AlertUI';
 import SelectorUI from './components/SelectorUI';
-import IndicatorUI from './components/IndicatorUI'; // Importar el componente IndicatorUI
+import IndicatorUI from './components/IndicatorUI';
 import DataFetcher from './functions/DataFetcher'
 import TableUI from './components/TableUI';
 import ChartUI from './components/ChartUI';
@@ -11,7 +11,19 @@ import { useState } from 'react';
 
 function App() {
   const [selectedCity, setSelectedCity] = useState('guayaquil');
-  const dataFetcherOutput = DataFetcher(selectedCity); // Modifica DataFetcher para aceptar ciudad
+  const dataFetcherOutput = DataFetcher(selectedCity);
+
+
+  let currentIndex = -1;
+
+  if (dataFetcherOutput.data?.hourly?.time?.length) {
+    const now = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const nowIsoHour = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:00`;
+    currentIndex = dataFetcherOutput.data.hourly.time.findIndex((isoTime: string) => isoTime === nowIsoHour);
+  }
+
+
 
   return (
     <Grid container spacing={5} justifyContent="center" alignItems="center">
@@ -36,9 +48,7 @@ function App() {
 
       {/* Indicadores */}
       <Grid container size={{ xs: 12, md: 9 }}>
-
         
-
         Elemento: Indicadores
          <Grid size={{ xs: 12, md: 3 }}>
           <IndicatorUI title="Temperatura (2m)" description="XX°C" />
@@ -64,27 +74,35 @@ function App() {
                      {/* Indicadores con datos obtenidos */}
 
                      <Grid size={{ xs: 12, md: 3 }} >
-                         <IndicatorUI
-                             title='Temperatura (2m)'
-                             description={dataFetcherOutput.data.hourly.temperature_2m + " " + dataFetcherOutput.data.hourly_units.temperature_2m} />
+                        <IndicatorUI
+                          title="Temperatura (2m)"
+                          description={
+                            currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.temperature_2m[currentIndex]} ${dataFetcherOutput.data.hourly_units.temperature_2m}` :'N/A'}
+                        />
+                     </Grid>
+
+                     <Grid size={{ xs: 12, md: 3 }}>
+                        <IndicatorUI
+                          title="Temperatura aparente"
+                          description={
+                            currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.apparent_temperature[currentIndex]} ${dataFetcherOutput.data.hourly_units.apparent_temperature}` :'N/A'}
+                        />
                      </Grid>
 
                      <Grid size={{ xs: 12, md: 3 }}>
                          <IndicatorUI
-                             title='Temperatura aparente'
-                             description={dataFetcherOutput.data.hourly.apparent_temperature + " " + dataFetcherOutput.data.hourly_units.apparent_temperature} />
-                     </Grid>
+                          title="Velocidad del viento"
+                          description={
+                            currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.wind_speed_10m[currentIndex]} ${dataFetcherOutput.data.hourly_units.wind_speed_10m}` :'N/A'}
+                        />                     
+                      </Grid>
 
                      <Grid size={{ xs: 12, md: 3 }}>
                          <IndicatorUI
-                             title='Velocidad del viento'
-                             description={dataFetcherOutput.data.hourly.wind_speed_10m + " " + dataFetcherOutput.data.hourly_units.wind_speed_10m} />
-                     </Grid>
-
-                     <Grid size={{ xs: 12, md: 3 }}>
-                         <IndicatorUI
-                             title='Humedad relativa'
-                             description={dataFetcherOutput.data.hourly.relative_humidity_2m + " " + dataFetcherOutput.data.hourly_units.relative_humidity_2m} />
+                             title="Humedad relativa"
+                              description={
+                            currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.relative_humidity_2m[currentIndex]} ${dataFetcherOutput.data.hourly_units.relative_humidity_2m}` :'N/A'}
+                        />
                      </Grid>
 
                  </>
