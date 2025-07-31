@@ -29,10 +29,12 @@ function App() {
     <Grid container spacing={5} justifyContent="center" alignItems="center">
 
       {/* Encabezado */}
-      <Grid size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }}>
-        Elemento: Encabezado
+      <Grid id="Encabezado" size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }}>
         <HeaderUI/>
       </Grid>
+
+
+      
 
       {/* Alertas */}
       <Grid size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }} container justifyContent="right" alignItems="center">
