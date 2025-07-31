@@ -23,8 +23,6 @@ function App() {
     currentIndex = dataFetcherOutput.data.hourly.time.findIndex((isoTime: string) => isoTime === nowIsoHour);
   }
 
-
-
   return (
     <Grid container spacing={5} justifyContent="center" alignItems="center">
 
@@ -32,9 +30,6 @@ function App() {
       <Grid id="Encabezado" size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }}>
         <HeaderUI/>
       </Grid>
-
-
-      
 
       {/* Alertas */}
       <Grid size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }} container justifyContent="right" alignItems="center">
