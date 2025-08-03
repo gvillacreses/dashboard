@@ -2,7 +2,6 @@
   max-width: 1280px;
   margin: 0 auto;
   padding: 24px;
-  /* width: 100%; */
 }
 
 .logo {
@@ -17,17 +16,6 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
-
-
-
-#Encabezado {
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem;
-  border: 1px solid #0c0404;
-  background-color: #22bae8;
-}
-
 
 @keyframes logo-spin {
   from {

@@ -22,9 +22,19 @@ export default function ChartUI({ loading, error, data }: ChartUIProps) {
    const arrValues1 = data.hourly.temperature_2m;
    const arrValues2 = data.hourly.apparent_temperature;
 
+
    return (
       <>
-         <Typography variant="h5" component="div">
+         <Typography 
+            variant="h6"
+            component="h2"
+            sx={{
+               fontWeight: 'bold',
+               fontFamily: 'cursive, system-ui, Avenir, Helvetica, Arial, sans-serif',
+               color: '#000000',
+               marginBottom: 1 
+            }}
+            >
             Temperatura vs Temperatura aparente
          </Typography>
          <LineChart
@@ -33,7 +43,10 @@ export default function ChartUI({ loading, error, data }: ChartUIProps) {
                { data: arrValues1, label: 'Temperatura (2m)'},
                { data: arrValues2, label: 'Temperatura aparente'},
             ]}
-            xAxis={[{ scaleType: 'point', data: arrLabels }]}
+            xAxis={[{ 
+               scaleType: 'point', 
+               data: arrLabels,
+            }]}
          />
       </>
    );

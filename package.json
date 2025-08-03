@@ -19,7 +19,9 @@
     "@mui/x-charts": "^8.8.0",
     "@mui/x-data-grid": "^8.8.0",
     "install": "^0.13.0",
+    "lucide-react": "^0.536.0",
     "npm": "^11.4.2",
+    "phosphor-react": "^1.4.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
