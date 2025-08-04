@@ -10,6 +10,9 @@ import ChartUI from './components/ChartUI';
 import { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { Thermometer, ThermometerHot, Wind, Drop } from "phosphor-react";
+import { Box } from '@mui/material';
+import { CircularProgress } from '@mui/material';
+import { Compass, Mountain } from 'lucide-react';
 
 function App() {
   const [selectedCity, setSelectedCity] = useState('guayaquil');
@@ -26,20 +29,21 @@ function App() {
   }
 
   return (
-    <Grid container spacing={3} justifyContent="center" alignItems="center">
+    <Grid container spacing={3} justifyContent="center" alignItems="center" sx={{ width: '100%', flexWrap: 'wrap' }}>
 
       {/* Encabezado */}
-      <Grid size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }}>
+      <Grid size={{ xs: 12, md: 12 }}>
         <HeaderUI/>
       </Grid>
 
       {/* Alertas y Selector*/}
       <Grid container spacing={3} width="100%">
-        <Grid size={{ xs: 6, md: 6 }} sx={{ display: {xs: 'none', md: 'block'} }}>
+        
+        <Grid size={{ xs: 6, md: 6 }}>
           <AlertUI description="No se preveen lluvias"/>
         </Grid>
 
-        <Grid size={{ xs: 6, md: 6 }} sx={{ display: {xs: 'none', md: 'block'} }}>
+        <Grid size={{ xs: 6, md: 6 }}>
           <SelectorUI onCityChange={setSelectedCity} />
         </Grid>
 
@@ -68,7 +72,7 @@ function App() {
             sx={{
               fontWeight: 'bold',
               fontFamily: 'cursive, system-ui, Avenir, Helvetica, Arial, sans-serif',
-              color: '#000000'
+              color: '#ffffff'
             }}
           >
             Indicadores del clima en {selectedCity.charAt(0).toUpperCase() + selectedCity.slice(1)}
@@ -77,7 +81,19 @@ function App() {
 
         {/* Indicadores con datos obtenidos */}
 
-        {dataFetcherOutput.loading && <p>Cargando datos...</p>}
+        {dataFetcherOutput.loading && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: '100%',
+            }}
+            >
+              <CircularProgress />
+            </Box>
+        )}
         {dataFetcherOutput.error && <p>Error: {dataFetcherOutput.error}</p>}
         {dataFetcherOutput.data && (
         <>
@@ -129,25 +145,42 @@ function App() {
       <Grid 
         size={{ xs: 12, md: 12 }} 
         sx={{ 
-          display: {xs: 'none', md: 'block'},
+          // display: {xs: 'none', md: 'block'},
           boxShadow: 1,
           borderRadius: 2,
           padding: 2,
-          backgroundColor: '#ffffff',
+          backgroundColor: '#303030',
         }}>
-        <ChartUI loading={dataFetcherOutput.loading} error={dataFetcherOutput.error} data={dataFetcherOutput.data} />
+        <ChartUI error={dataFetcherOutput.error} data={dataFetcherOutput.data} />
       </Grid>
 
-      {/* Tabla */}
-      <Grid size={{ xs: 12, md: 6 }} sx={{ display: {xs: 'none', md: 'block'} }}>
-        <TableUI loading={dataFetcherOutput.loading} error={dataFetcherOutput.error} data={dataFetcherOutput.data} />
-      </Grid>
 
-      {/* Información adicional */}
-      <Grid size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }}>
-        Elemento: Información adicional
-      </Grid>
+      {/* Tabla e Info adicional*/}
+      <Grid container spacing={3} width="100%" alignItems={'center'} sx={{width:'100%', paddingBottom: 5}}>
 
+        <Grid size={{ xs: 12, md: 9 }}>
+          <TableUI loading={dataFetcherOutput.loading} error={dataFetcherOutput.error} data={dataFetcherOutput.data} />
+        </Grid>
+
+        <Grid container direction="column" spacing={2} size={{ xs: 12, md: 3 }}>
+          <Grid size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }}>
+            <IndicatorUI
+              title="latitud"
+              icon={<Compass size={32} />}
+              description={`${dataFetcherOutput.data?.latitude}`}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }}>
+            <IndicatorUI
+              title="longitud"
+              icon={<Mountain size={32} />}
+              description={`${dataFetcherOutput.data?.longitude}`}
+            />
+          </Grid>
+        </Grid>
+      
+      </Grid>
+      
     </Grid>
       
 

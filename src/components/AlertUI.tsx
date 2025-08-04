@@ -14,7 +14,7 @@ export default function AlertUI( config:AlertConfig ) {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 padding: 2,
-                backgroundColor: '#ffffff',
+                backgroundColor: '#5c5c5c',
                 borderRadius: 2,
                 boxShadow: 1,
             }}>
@@ -24,7 +24,7 @@ export default function AlertUI( config:AlertConfig ) {
                 sx={{
                     fontWeight: 'bold',
                     fontFamily: 'cursive, system-ui, Avenir, Helvetica, Arial, sans-serif',
-                    color: '#000000',
+                    color: '#bf6210ff',
                     marginBottom: 1 
                 }}>
                 ⚠️ Alertas del Sistema
@@ -34,13 +34,13 @@ export default function AlertUI( config:AlertConfig ) {
                 variant="filled" 
                 severity="info" 
                 sx={{
-                    backgroundColor: '#ffaa330d',
-                    border: '1px solid #febf67ff',
+                    backgroundColor: '#18659cff',
+                    // backgroundColor: '#1565c0',
                     color: '#000000',
                     fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
                     fontSize: '1rem',
                     padding: 1,
-                    borderRadius: 1
+                    borderRadius: 2
                 }}>
                 {config.description}
             </Alert>
