@@ -24,7 +24,7 @@ export default function IndicatorUI(props: IndicatorUIProps) {
                     {props.icon}
                 </Typography>
 
-                <Typography variant="h5" component="div" color="white">
+                <Typography variant="h5" component="div" color="white" >
                     {props.description}
                 </Typography>
             </Box>

@@ -37,7 +37,7 @@ export default function SelectorUI({ onCityChange }: SelectorUIProps) {
         component="h2"
         sx={{
             fontWeight: 'bold',
-            fontFamily: 'cursive, system-ui, Avenir, Helvetica, Arial, sans-serif',
+            fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
             color: '#ffffff',
             marginBottom: 1 
         }}>

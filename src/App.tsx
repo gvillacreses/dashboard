@@ -10,7 +10,6 @@ import ChartUI from './components/ChartUI';
 import { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { Thermometer, ThermometerHot, Wind, Drop } from "phosphor-react";
-import { Box } from '@mui/material';
 import { CircularProgress } from '@mui/material';
 import { Compass, Mountain } from 'lucide-react';
 
@@ -30,160 +29,141 @@ function App() {
 
   return (
     <Grid container spacing={3} justifyContent="center" alignItems="center" sx={{ width: '100%', flexWrap: 'wrap' }}>
-
       {/* Encabezado */}
       <Grid size={{ xs: 12, md: 12 }}>
         <HeaderUI/>
       </Grid>
-
-      {/* Alertas y Selector*/}
-      <Grid container spacing={3} width="100%">
-        
-        <Grid size={{ xs: 6, md: 6 }}>
-          <AlertUI description="No se preveen lluvias"/>
-        </Grid>
-
-        <Grid size={{ xs: 6, md: 6 }}>
-          <SelectorUI onCityChange={setSelectedCity} />
-        </Grid>
-
-        
-      </Grid>
       
       
-
-      {/* Indicadores */}
-      <Grid 
-        container
-        spacing={3}
-        sx={{ 
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          width: '100%',
-        }}
-      >
-        
-        <Grid container spacing={2} sx={{ width: '100%' }}>
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{
-              fontWeight: 'bold',
-              fontFamily: 'cursive, system-ui, Avenir, Helvetica, Arial, sans-serif',
-              color: '#ffffff'
-            }}
+      {dataFetcherOutput.loading && (
+        <Grid spacing={3} width="100%" size={{ xs: 12, md: 12 }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 2
+          }}
           >
-            Indicadores del clima en {selectedCity.charAt(0).toUpperCase() + selectedCity.slice(1)}
-          </Typography>
+            <CircularProgress />
+            {/* <p>Loading...</p> */}
         </Grid>
-
-        {/* Indicadores con datos obtenidos */}
-
-        {dataFetcherOutput.loading && (
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-              height: '100%',
-            }}
-            >
-              <CircularProgress />
-            </Box>
-        )}
-        {dataFetcherOutput.error && <p>Error: {dataFetcherOutput.error}</p>}
-        {dataFetcherOutput.data && (
+      )}
+      {dataFetcherOutput.error && <p>Error: {dataFetcherOutput.error}</p>}
+      {dataFetcherOutput.data && (
         <>
 
+          
+          {/* Alertas y Selector*/}
+          <Grid container spacing={3} width="100%">
+            <Grid size={{ xs: 12, md: 6 }}>
+              <SelectorUI onCityChange={setSelectedCity} />
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <AlertUI data={dataFetcherOutput.data}/>
+            </Grid>
+          </Grid>
+          
           {/* Indicadores con datos obtenidos */}
+          <Grid 
+            container
+            sx={{ 
+              display: 'flex',
+              flexDirection: { xs: 'column', md: 'row' },
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              width: '100%',
+            }}>
+             
+            
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{
+                fontWeight: 'bold',
+                fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
+                color: '#ffffff',
+                width: '100%',
+                marginBottom: 1 
+              }}>
+              Indicadores del clima en {selectedCity.charAt(0).toUpperCase() + selectedCity.slice(1)}
+            </Typography>
 
-          <Grid size={{ xs: 12, md: 3 }}>
-            <IndicatorUI
-              title="Temperatura (2m)"
-              icon={<Thermometer size={32} />}
-              description={
-                currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.temperature_2m[currentIndex]} ${dataFetcherOutput.data.hourly_units.temperature_2m}` :'N/A'}
-            />
+            <Grid container spacing={3} width="100%">
+              <Grid size={{ xs: 12, md: 3 }}>
+                <IndicatorUI
+                  title="Temperatura (2m)"
+                  icon={<Thermometer size={32} />}
+                  description={
+                    currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.temperature_2m[currentIndex]} ${dataFetcherOutput.data.hourly_units.temperature_2m}` :'N/A'}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, md: 3 }}>
+                <IndicatorUI
+                  title="Temperatura aparente"
+                  icon={<ThermometerHot size={32} />}
+                  description={
+                    currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.apparent_temperature[currentIndex]} ${dataFetcherOutput.data.hourly_units.apparent_temperature}` :'N/A'}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, md: 3 }}>
+                <IndicatorUI
+                  title="Velocidad del viento"
+                  icon={<Wind size={32} />}
+                  description={
+                    currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.wind_speed_10m[currentIndex]} ${dataFetcherOutput.data.hourly_units.wind_speed_10m}` :'N/A'}
+                />                     
+              </Grid>
+              <Grid size={{ xs: 12, md: 3 }}>
+                <IndicatorUI
+                  title="Humedad relativa"
+                  icon={<Drop size={32} />}
+                  description={
+                    currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.relative_humidity_2m[currentIndex]} ${dataFetcherOutput.data.hourly_units.relative_humidity_2m}` :'N/A'}
+                />
+              </Grid>
+
+            </Grid>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 3 }}>
-            <IndicatorUI
-              title="Temperatura aparente"
-              icon={<ThermometerHot size={32} />}
-              description={
-                currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.apparent_temperature[currentIndex]} ${dataFetcherOutput.data.hourly_units.apparent_temperature}` :'N/A'}
-            />
+          {/* Gráfico */}
+          <Grid 
+            size={{ xs: 12, md: 12 }} 
+            sx={{ 
+              borderRadius: 2,
+              padding: 3,
+              backgroundColor: '#303030',
+            }}>
+            <ChartUI data={dataFetcherOutput.data} />
           </Grid>
 
-          <Grid size={{ xs: 12, md: 3 }}>
-            <IndicatorUI
-              title="Velocidad del viento"
-              icon={<Wind size={32} />}
-              description={
-                currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.wind_speed_10m[currentIndex]} ${dataFetcherOutput.data.hourly_units.wind_speed_10m}` :'N/A'}
-            />                     
-          </Grid>
+          {/* Tabla e Info adicional*/}
+          <Grid container spacing={3} width="100%" alignItems={'center'}>
+            <Grid size={{ xs: 12, md: 9 }}>
+              <TableUI  data={dataFetcherOutput.data} />
+            </Grid>
 
-          <Grid size={{ xs: 12, md: 3 }}>
-            <IndicatorUI
-              title="Humedad relativa"
-              icon={<Drop size={32} />}
-              description={
-                currentIndex !== -1 ? `${dataFetcherOutput.data.hourly.relative_humidity_2m[currentIndex]} ${dataFetcherOutput.data.hourly_units.relative_humidity_2m}` :'N/A'}
-            />
+            <Grid container direction="column" spacing={2} size={{ xs: 12, md: 3 }}>
+              <Grid size={{ xs: 12, md: 12 }}>
+                <IndicatorUI
+                  title="latitud"
+                  icon={<Compass size={32} />}
+                  description={`${dataFetcherOutput.data?.latitude}`}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, md: 12 }}>
+                <IndicatorUI
+                  title="longitud"
+                  icon={<Mountain size={32} />}
+                  description={`${dataFetcherOutput.data?.longitude}`}
+                />
+              </Grid>
+            </Grid>
           </Grid>
 
         </>
-        )}
-
-      </Grid>
-
-      {/* Gráfico */}
-      <Grid 
-        size={{ xs: 12, md: 12 }} 
-        sx={{ 
-          // display: {xs: 'none', md: 'block'},
-          boxShadow: 1,
-          borderRadius: 2,
-          padding: 2,
-          backgroundColor: '#303030',
-        }}>
-        <ChartUI error={dataFetcherOutput.error} data={dataFetcherOutput.data} />
-      </Grid>
-
-
-      {/* Tabla e Info adicional*/}
-      <Grid container spacing={3} width="100%" alignItems={'center'} sx={{width:'100%', paddingBottom: 5}}>
-
-        <Grid size={{ xs: 12, md: 9 }}>
-          <TableUI loading={dataFetcherOutput.loading} error={dataFetcherOutput.error} data={dataFetcherOutput.data} />
-        </Grid>
-
-        <Grid container direction="column" spacing={2} size={{ xs: 12, md: 3 }}>
-          <Grid size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }}>
-            <IndicatorUI
-              title="latitud"
-              icon={<Compass size={32} />}
-              description={`${dataFetcherOutput.data?.latitude}`}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, md: 12 }} sx={{ display: {xs: 'none', md: 'block'} }}>
-            <IndicatorUI
-              title="longitud"
-              icon={<Mountain size={32} />}
-              description={`${dataFetcherOutput.data?.longitude}`}
-            />
-          </Grid>
-        </Grid>
-      
-      </Grid>
+      )}
       
     </Grid>
-      
-
   )
 }
 

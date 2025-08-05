@@ -1,14 +1,34 @@
-import Box from '@mui/material/Box';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
-function aggregateByDay(
-  labels: string[],
-  values1: number[],
-  values2: number[]
-) {
+type TableUIProps = {
+  data: any;
+};
+
+function sameDate(d1: Date, d2: Date) {
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
+}
+
+export default function TableUI({ data }: TableUIProps) {
+  if (!data || !data.hourly) {
+    return <p>No hay datos disponibles.</p>;
+  }
+
+  const labels: string[] = data.hourly.time || [];
+  const values1: number[] = data.hourly.temperature_2m || [];
+  const values2: number[] = data.hourly.apparent_temperature || [];
+
   const dayMap: Record<string, { temps1: number[]; temps2: number[] }> = {};
-
   for (let i = 0; i < labels.length; i++) {
     const day = labels[i].split('T')[0];
     if (!dayMap[day]) {
@@ -18,133 +38,121 @@ function aggregateByDay(
     dayMap[day].temps2.push(values2[i]);
   }
 
-  const rows = Object.entries(dayMap).map(([day, temps], index) => {
-    const minTemp1 = Math.min(...temps.temps1);
-    const maxTemp1 = Math.max(...temps.temps1);
-    const avgTemp1 = temps.temps1.reduce((a, b) => a + b, 0) / temps.temps1.length;
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
 
-    const minTemp2 = Math.min(...temps.temps2);
-    const maxTemp2 = Math.max(...temps.temps2);
-    const avgTemp2 = temps.temps2.reduce((a, b) => a + b, 0) / temps.temps2.length;
+  const tablaDatos = Object.entries(dayMap).map(([day, temps]) => {
+    const avg = (arr: number[]) => arr.reduce((a, b) => a + b, 0) / arr.length;
+
+    // Formatear el día
+    const [year, month, dayOfMonth] = day.split('-').map(Number);
+    const dateObj = new Date(year, month - 1, dayOfMonth);
+
+    let displayDay = '';
+    if (sameDate(dateObj, today)) displayDay = 'Hoy';
+    else if (sameDate(dateObj, tomorrow)) displayDay = 'Mañana';
+    else displayDay = dateObj.toLocaleDateString('es-ES', {
+      month: 'long',
+      day: 'numeric',
+    });
 
     return {
-      id: index,  // el DataGrid necesita un id único
-      label: day,
-      minTemp1,
-      maxTemp1,
-      avgTemp1,
-      minTemp2,
-      maxTemp2,
-      avgTemp2,
+      day,
+      displayDay,
+      minTemp1: Math.min(...temps.temps1),
+      maxTemp1: Math.max(...temps.temps1),
+      avgTemp1: Number(avg(temps.temps1).toFixed(1)),
+      minTemp2: Math.min(...temps.temps2),
+      maxTemp2: Math.max(...temps.temps2),
+      avgTemp2: Number(avg(temps.temps2).toFixed(1)),
     };
   });
 
-  return rows;
+  return (
+    <>
+      <Typography
+        variant="h6"
+        component="h2"
+        sx={{
+          fontWeight: 'bold',
+          fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
+          color: '#ffffff',
+          marginBottom: 1,
+        }}
+      >
+        Registro de Condiciones Climáticas
+      </Typography>
+
+      <TableContainer
+        component={Paper}
+        sx={{
+          maxWidth: '100%',
+          margin: 'auto',
+          bgcolor: '#0f172a',
+          borderRadius: 2,
+          overflowX: 'auto',
+        }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow sx={{ bgcolor: '#252525' }}>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Día</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
+                Temp Min
+              </TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
+                Temp Max
+              </TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
+                Temp Prom
+              </TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
+                Temp Apar Min
+              </TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
+                Temp Apar Max
+              </TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
+                Temp Apar Prom
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tablaDatos.map((row) => (
+              <TableRow
+                key={row.day}
+                sx={{
+                  '&:nth-of-type(odd)': { bgcolor: '#383838' },
+                  '&:nth-of-type(even)': { bgcolor: '#383838' },
+                  '&:hover': { bgcolor: '#4a4a4a' },
+                }}
+              >
+                <TableCell sx={{ color: '#e0e0e0' }}>{row.displayDay}</TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
+                  {row.minTemp1}
+                </TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
+                  {row.maxTemp1}
+                </TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
+                  {row.avgTemp1}
+                </TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
+                  {row.minTemp2}
+                </TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
+                  {row.maxTemp2}
+                </TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
+                  {row.avgTemp2}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
+  );
 }
 
-
-
-type TableUIProps = {
-   loading: boolean;
-   error: string | null;
-   data: any;
-};
-
-
-const columns: GridColDef[] = [
-  {
-    field: 'label',
-    headerName: 'Día',
-    width: 150,
-    align: 'center',
-    headerAlign: 'center',
-    valueFormatter: (params) => {
-      const [year, month, day] = (params as string).split('-').map(Number);
-      const date = new Date(year, month - 1, day); // <- Esto crea fecha en hora local
-      const today = new Date();
-      const tomorrow = new Date();
-      tomorrow.setDate(today.getDate() + 1);
-
-      function sameDate(d1: Date, d2: Date) {
-        return d1.getFullYear() === d2.getFullYear() &&
-               d1.getMonth() === d2.getMonth() &&
-               d1.getDate() === d2.getDate();
-      }
-
-      if (sameDate(date, today)) return 'Hoy';
-      if (sameDate(date, tomorrow)) return 'Mañana';
-
-      return date.toLocaleDateString('es-ES', { month: 'long', day: 'numeric' });
-    }
-  },
-  { field: 'minTemp1', headerName: 'Temp Min', width: 120, align: 'center', headerAlign: 'center' },
-  { field: 'maxTemp1', headerName: 'Temp Max', width: 120, align: 'center', headerAlign: 'center' },
-  { field: 'avgTemp1', headerName: 'Temp Prom', width: 120, align: 'center', headerAlign: 'center' },
-  { field: 'minTemp2', headerName: 'Temp Apar Min', width: 140, align: 'center', headerAlign: 'center' },
-  { field: 'maxTemp2', headerName: 'Temp Apar Max', width: 140, align: 'center', headerAlign: 'center' },
-  { field: 'avgTemp2', headerName: 'Temp Apar Prom', width: 140, align: 'center', headerAlign: 'center' },
-];
-
-
-export default function TableUI({ loading, error, data }: TableUIProps) {
-   if (loading) {
-      return <p>Cargando datos...</p>;
-   }
-   if (error) {
-      return <p>Error: {error}</p>;
-   }
-   if (!data || !data.hourly) {
-      return <p>No hay datos disponibles.</p>;
-   }
-
-   // Datos de la API
-   const arrLabels = data.hourly.time || [];
-   const arrValues1 = data.hourly.temperature_2m || [];
-   const arrValues2 = data.hourly.apparent_temperature || [];
-
-   const rows = aggregateByDay(arrLabels, arrValues1, arrValues2);
-
-   return (
-      <Box sx={{ height: 350, width: '100%' }}>
-         <Typography 
-            variant="h6"
-            component="h2"
-            sx={{
-               fontWeight: 'bold',
-               fontFamily: 'cursive, system-ui, Avenir, Helvetica, Arial, sans-serif',
-               color: '#ffffff',
-               marginBottom: 1 
-            }}
-            >
-               Registro de Condiciones Climáticas
-         </Typography>
-
-         <DataGrid
-            rows={rows}
-            columns={columns}
-            initialState={{
-               pagination: {
-                  paginationModel: {
-                     pageSize: 5,
-                  },
-               },
-            }}
-            pageSizeOptions={[5]}
-            disableRowSelectionOnClick
-            sx={{
-               backgroundColor: '#303030',  //background de la tabla
-               color: 'white', //texto
-               
-               '& .MuiDataGrid-columnHeaders': {
-                  color: 'black',             
-               },
-
-               '& .MuiDataGrid-row:hover': {
-                  backgroundColor: '#18659cff', // para cuando el puntero este encima de cada fila
-               },
-
-            }}
-         />
-      </Box>
-   );
-}

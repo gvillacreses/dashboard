@@ -2,7 +2,6 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import Typography from '@mui/material/Typography';
 
 type ChartUIProps = {
-   error: string | null;
    data: any;
 };
 
@@ -13,10 +12,8 @@ function getFormattedToday() {
 }
 
 
-export default function ChartUI({ error, data }: ChartUIProps) {
-   if (error) {
-      return <p>Error: {error}</p>;
-   }
+export default function ChartUI({ data }: ChartUIProps) {
+
    if (!data || !data.hourly) {
       return <p>No hay datos disponibles.</p>;
    }
@@ -52,7 +49,7 @@ export default function ChartUI({ error, data }: ChartUIProps) {
             component="h2"
             sx={{
                fontWeight: 'bold',
-               fontFamily: 'cursive, system-ui, Avenir, Helvetica, Arial, sans-serif',
+               fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
                color: '#ffffff',
                marginBottom: 1 
             }}

@@ -8,7 +8,8 @@ export default function HeaderUI() {
       sx={{ 
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#22bae8',
+        // backgroundColor: '#22bae8',
+        backgroundColor: '#1a7ca8',
         borderRadius: 2,
         boxShadow: 1,
         padding: 5,
@@ -30,7 +31,7 @@ export default function HeaderUI() {
           component="h1"
           sx={{
               fontWeight: 'bold',
-              fontFamily: 'cursive, system-ui, Avenir, Helvetica, Arial, sans-serif',
+              fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
               color: '#ffffff',
           }}
         >
@@ -44,7 +45,7 @@ export default function HeaderUI() {
           component="p"
           sx={{
               fontWeight: 'bold',
-              fontFamily: 'cursive, system-ui, Avenir, Helvetica, Arial, sans-serif',
+              fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
               color: '#ffffff',
           }}
         >

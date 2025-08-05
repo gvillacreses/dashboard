@@ -16,6 +16,7 @@ export interface Hourly {
   relative_humidity_2m: number[];
   apparent_temperature: number[];
   wind_speed_10m: number[];
+  precipitation_probability: number[];
 }
 
 export interface Hourlyunits {
@@ -24,4 +25,5 @@ export interface Hourlyunits {
   relative_humidity_2m: string;
   apparent_temperature: string;
   wind_speed_10m: string;
+  precipitation_probability: string;
 }
