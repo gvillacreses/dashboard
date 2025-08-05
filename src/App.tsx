@@ -45,7 +45,7 @@ function App() {
           }}
           >
             <CircularProgress />
-            {/* <p>Loading...</p> */}
+            <p>Loading...</p>
         </Grid>
       )}
       {dataFetcherOutput.error && <p>Error: {dataFetcherOutput.error}</p>}
