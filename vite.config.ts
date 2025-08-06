@@ -14,10 +14,10 @@ export default defineConfig({
          includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
          manifest: {
             id: '/dashboard/',
-            name: 'Dashboard del Clima',
-            short_name: 'Dashboard del Clima',
+            name: 'Thermora',
+            short_name: 'Thermora',
             description: 'Proyecto 04 - dashboard del clima desarrollado con React y MUI',
-            theme_color: '#D3D1D1',
+            theme_color: '#1f1f1f',
             icons: [
                {
                   src: 'pwa-192x192.png',

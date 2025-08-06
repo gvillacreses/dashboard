@@ -28,44 +28,46 @@ export default function TableUI({ data }: TableUIProps) {
   const values1: number[] = data.hourly.temperature_2m || [];
   const values2: number[] = data.hourly.apparent_temperature || [];
 
-  const dayMap: Record<string, { temps1: number[]; temps2: number[] }> = {};
+  const dayMap: Record<string, { temps1: number[]; temps2: number[]; hourLabels: string[] }> = {};
+
   for (let i = 0; i < labels.length; i++) {
     const day = labels[i].split('T')[0];
     if (!dayMap[day]) {
-      dayMap[day] = { temps1: [], temps2: [] };
+      dayMap[day] = { temps1: [], temps2: [], hourLabels: [] };
     }
     dayMap[day].temps1.push(values1[i]);
     dayMap[day].temps2.push(values2[i]);
+    dayMap[day].hourLabels.push(labels[i]);
   }
 
   const today = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
+  const currentHour = today.getHours();
 
   const tablaDatos = Object.entries(dayMap).map(([day, temps]) => {
-    const avg = (arr: number[]) => arr.reduce((a, b) => a + b, 0) / arr.length;
-
-    // Formatear el día
     const [year, month, dayOfMonth] = day.split('-').map(Number);
     const dateObj = new Date(year, month - 1, dayOfMonth);
 
     let displayDay = '';
     if (sameDate(dateObj, today)) displayDay = 'Hoy';
     else if (sameDate(dateObj, tomorrow)) displayDay = 'Mañana';
-    else displayDay = dateObj.toLocaleDateString('es-ES', {
-      month: 'long',
-      day: 'numeric',
-    });
+    else
+      displayDay = dateObj.toLocaleDateString('es-ES', {
+        month: 'long',
+        day: 'numeric',
+      });
+
+    const tempActual = temps.temps1[currentHour] ?? '-';
 
     return {
       day,
       displayDay,
       minTemp1: Math.min(...temps.temps1),
       maxTemp1: Math.max(...temps.temps1),
-      avgTemp1: Number(avg(temps.temps1).toFixed(1)),
       minTemp2: Math.min(...temps.temps2),
       maxTemp2: Math.max(...temps.temps2),
-      avgTemp2: Number(avg(temps.temps2).toFixed(1)),
+      tempActual,
     };
   });
 
@@ -81,41 +83,34 @@ export default function TableUI({ data }: TableUIProps) {
           marginBottom: 1,
         }}
       >
-        Registro de Condiciones Climáticas
+        📅 Registro de temperaturas diarias
       </Typography>
 
       <TableContainer
         component={Paper}
         sx={{
-          maxWidth: '100%',
-          margin: 'auto',
+          width: '100%',
           bgcolor: '#0f172a',
           borderRadius: 2,
           overflowX: 'auto',
+          '&::-webkit-scrollbar': {
+            height: '6px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#888',
+            borderRadius: '8px',
+          },
         }}
       >
         <Table>
           <TableHead>
             <TableRow sx={{ bgcolor: '#252525' }}>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Día</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
-                Temp Min
-              </TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
-                Temp Max
-              </TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
-                Temp Prom
-              </TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
-                Temp Apar Min
-              </TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
-                Temp Apar Max
-              </TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">
-                Temp Apar Prom
-              </TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Día</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Temp Hora Actual</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Temp Min</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Temp Max</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Temp Apar Min</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Temp Apar Max</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -128,25 +123,12 @@ export default function TableUI({ data }: TableUIProps) {
                   '&:hover': { bgcolor: '#4a4a4a' },
                 }}
               >
-                <TableCell sx={{ color: '#e0e0e0' }}>{row.displayDay}</TableCell>
-                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
-                  {row.minTemp1}
-                </TableCell>
-                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
-                  {row.maxTemp1}
-                </TableCell>
-                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
-                  {row.avgTemp1}
-                </TableCell>
-                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
-                  {row.minTemp2}
-                </TableCell>
-                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
-                  {row.maxTemp2}
-                </TableCell>
-                <TableCell align="center" sx={{ color: '#e0e0e0' }}>
-                  {row.avgTemp2}
-                </TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.displayDay}</TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.tempActual.toFixed(1)}</TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.minTemp1}</TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.maxTemp1}</TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.minTemp2}</TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.maxTemp2}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -155,4 +137,3 @@ export default function TableUI({ data }: TableUIProps) {
     </>
   );
 }
-

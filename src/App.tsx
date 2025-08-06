@@ -13,6 +13,7 @@ import { Thermometer, ThermometerHot, Wind, Drop } from "phosphor-react";
 import { CircularProgress } from '@mui/material';
 import { Compass, Mountain } from 'lucide-react';
 
+
 function App() {
   const [selectedCity, setSelectedCity] = useState('guayaquil');
   const dataFetcherOutput = DataFetcher(selectedCity);
@@ -28,9 +29,16 @@ function App() {
   }
 
   return (
+    
     <Grid container spacing={3} justifyContent="center" alignItems="center" sx={{ width: '100%', flexWrap: 'wrap' }}>
       {/* Encabezado */}
-      <Grid size={{ xs: 12, md: 12 }}>
+      <Grid container size={{ xs: 12, md: 12 }} spacing={2}
+      sx={{ 
+        backgroundImage: 'linear-gradient(to right, #145374, #1a7ca8, #f7b733, #fc4a1a)',
+        borderRadius: 2,
+        boxShadow: 1,
+        padding: 5,
+      }}>
         <HeaderUI/>
       </Grid>
       
@@ -73,7 +81,7 @@ function App() {
               alignItems: 'center',
               width: '100%',
             }}>
-             
+            
             
             <Typography
               variant="h6"
@@ -85,7 +93,7 @@ function App() {
                 width: '100%',
                 marginBottom: 1 
               }}>
-              Indicadores del clima en {selectedCity.charAt(0).toUpperCase() + selectedCity.slice(1)}
+              🌤️ Condiciones actuales del clima en {selectedCity.charAt(0).toUpperCase() + selectedCity.slice(1)}
             </Typography>
 
             <Grid container spacing={3} width="100%">
@@ -137,33 +145,51 @@ function App() {
           </Grid>
 
           {/* Tabla e Info adicional*/}
-          <Grid container spacing={3} width="100%" alignItems={'center'}>
+          <Grid container spacing={3} width="100%">
             <Grid size={{ xs: 12, md: 9 }}>
               <TableUI  data={dataFetcherOutput.data} />
             </Grid>
 
-            <Grid container direction="column" spacing={2} size={{ xs: 12, md: 3 }}>
-              <Grid size={{ xs: 12, md: 12 }}>
-                <IndicatorUI
-                  title="latitud"
-                  icon={<Compass size={32} />}
-                  description={`${dataFetcherOutput.data?.latitude}`}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, md: 12 }}>
-                <IndicatorUI
-                  title="longitud"
-                  icon={<Mountain size={32} />}
-                  description={`${dataFetcherOutput.data?.longitude}`}
-                />
+            <Grid container spacing={0} direction="column" size={{ xs: 12, md: 3 }} justifyContent={'center'}>
+              <Typography
+                variant="h6"
+                component="h2"
+                sx={{
+                  fontWeight: 'bold',
+                  fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
+                  color: '#ffffff',
+                  marginBottom: 1,
+                }}
+              >
+                🧭 Coordenadas actuales
+              </Typography>
+              <Grid container spacing={3} width="100%">
+                <Grid size={{ xs: 12, md: 12 }}>
+                  <IndicatorUI
+                    title="latitud"
+                    icon={<Compass size={32} />}
+                    description={`${dataFetcherOutput.data?.latitude}`}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 12 }}>
+                  <IndicatorUI
+                    title="longitud"
+                    icon={<Mountain size={32} />}
+                    description={`${dataFetcherOutput.data?.longitude}`}
+                  />
+                </Grid>
+                
               </Grid>
             </Grid>
+
           </Grid>
 
         </>
       )}
       
     </Grid>
+
+    
   )
 }
 

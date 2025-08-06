@@ -19,23 +19,31 @@ export default function AlertUI({ data }: AlertUIProps) {
   const temperature = data.hourly.temperature_2m?.[index];
   const precipitation = data.hourly.precipitation_probability?.[index] ?? 0;
 
-  let alertMessage = '';
-  let backgroundColor = '';
+  let alertMessages: string[] = [];
+  let backgroundColor = '#9ccc65'; // verde por defecto (sin alertas)
 
   if (temperature >= 30) {
-    alertMessage = `⚠️ Alerta de calor extremo: ${temperature} °C`;
+    alertMessages.push(`🌡️ Temperatura superior a los 30°C`);
     backgroundColor = '#ff9800';
-  } else if (temperature <= 18) {
-    alertMessage = `❄️ Alerta de frío extremo: ${temperature} °C`;
-    backgroundColor = '#2196f3';
-  } else if (precipitation > 70) {
-    alertMessage = `🌧️ Alta probabilidad de lluvia: ${precipitation}%`;
-    backgroundColor = '#4caf50';
   }
 
+  if (temperature <= 10) {
+    alertMessages.push(`❄️ Temperatura inferior a los 10°C`);
+    if (backgroundColor === '#9ccc65') backgroundColor = '#2196f3';
+  }
+
+  if (precipitation > 70) {
+    alertMessages.push(`🌧️ ${precipitation}% de probabilidad de lluvia`);
+    if (backgroundColor === '#9ccc65') backgroundColor = '#cfd8dc';
+  }
+
+  const alertMessage = alertMessages.length > 0
+    ? alertMessages.join(' con ')
+    : 'No hay alertas en este momento.';
+
   return (
-    <Box 
-      sx={{ 
+    <Box
+      sx={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -45,24 +53,24 @@ export default function AlertUI({ data }: AlertUIProps) {
         boxShadow: 1,
       }}
     >
-      <Typography 
+      <Typography
         variant="h6"
         component="h2"
         sx={{
           fontWeight: 'bold',
           fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
           color: '#ffffff',
-          marginBottom: 1 
+          marginBottom: 1
         }}
       >
-        ⚠️ Alertas del Sistema
+        ⚠️ Alertas Climáticas
       </Typography>
 
-      <Alert 
-        variant="filled" 
-        severity={alertMessage ? 'info' : 'success'} 
+      <Alert
+        variant="filled"
+        severity={alertMessages.length > 0 ? 'info' : 'success'}
         sx={{
-          backgroundColor: alertMessage ? backgroundColor : '#9ccc65',
+          backgroundColor,
           color: '#000000',
           fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
           fontSize: '1rem',
@@ -70,11 +78,10 @@ export default function AlertUI({ data }: AlertUIProps) {
           borderRadius: 2
         }}
       >
-        {alertMessage || 'No hay alertas en este momento.'}
+        {alertMessage}
       </Alert>
     </Box>
   );
 }
-
 
 

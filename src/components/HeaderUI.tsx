@@ -1,58 +1,40 @@
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { Cloud } from 'lucide-react';
+import { Grid } from '@mui/material';
 
 export default function HeaderUI() {
   return (
-    <Box 
-      sx={{ 
-        display: 'flex',
-        flexDirection: 'column',
-        // backgroundColor: '#22bae8',
-        backgroundColor: '#1a7ca8',
-        borderRadius: 2,
-        boxShadow: 1,
-        padding: 5,
-      }}>
-
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          gap: 2, //Espacio entre icono y texto 
-        }}>
-
-        <Cloud size={48} color="#ffffffff"/>
+    <>
+        <img src="/dashboard/logo.png" style={{ width: 48, height: 48 }} />
         
-        <Typography
-          variant="h4"
-          component="h1"
-          sx={{
+        <Grid container direction={'column'} spacing={1} alignContent={'center'}> 
+          <Typography
+            variant="h4"
+            component="h1"
+            sx={{
               fontWeight: 'bold',
-              fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
+              fontFamily: 'Poppins, Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif',
               color: '#ffffff',
-          }}
-        >
-          Dashboard Meteorológico
-        </Typography>
-      </Box>
-    
-      <Box sx={{ marginTop: 1 }}>
-        <Typography
-          variant="body1"
-          component="p"
-          sx={{
-              fontWeight: 'bold',
-              fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
-              color: '#ffffff',
-          }}
-        >
-          Monitoreo en tiempo real de condiciones climáticas
-        </Typography>
-      </Box>  
+              letterSpacing: '0.5px',
+              textShadow: '1px 1px 2px rgba(0,0,0,0.4)',
+            }}
+
+          >
+            Thermora
+          </Typography>
+          
+          <Typography
+            variant="body1"
+            component="p"
+            sx={{
+                fontWeight: 'bold',
+                fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
+                color: '#ffffff',
+            }}
+          >
+            Dashboard Meteorológico
+          </Typography>
+        </Grid>
       
-    </Box>
+    </>
   );
 }

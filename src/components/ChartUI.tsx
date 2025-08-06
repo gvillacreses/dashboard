@@ -54,7 +54,7 @@ export default function ChartUI({ data }: ChartUIProps) {
                marginBottom: 1 
             }}
             >
-            Condiciones térmicas del día de hoy ({getFormattedToday()})
+            🌡️ Variación de temperaturas de hoy ({getFormattedToday()})
          </Typography>
          <LineChart
             height={300}
