@@ -25,18 +25,16 @@ export default function TableUI({ data }: TableUIProps) {
   }
 
   const labels: string[] = data.hourly.time || [];
-  const values1: number[] = data.hourly.temperature_2m || [];
-  const values2: number[] = data.hourly.apparent_temperature || [];
+  const temps: number[] = data.hourly.temperature_2m || [];
 
-  const dayMap: Record<string, { temps1: number[]; temps2: number[]; hourLabels: string[] }> = {};
+  const dayMap: Record<string, { temps: number[]; hourLabels: string[] }> = {};
 
   for (let i = 0; i < labels.length; i++) {
     const day = labels[i].split('T')[0];
     if (!dayMap[day]) {
-      dayMap[day] = { temps1: [], temps2: [], hourLabels: [] };
+      dayMap[day] = { temps: [], hourLabels: [] };
     }
-    dayMap[day].temps1.push(values1[i]);
-    dayMap[day].temps2.push(values2[i]);
+    dayMap[day].temps.push(temps[i]);
     dayMap[day].hourLabels.push(labels[i]);
   }
 
@@ -45,7 +43,7 @@ export default function TableUI({ data }: TableUIProps) {
   tomorrow.setDate(today.getDate() + 1);
   const currentHour = today.getHours();
 
-  const tablaDatos = Object.entries(dayMap).map(([day, temps]) => {
+  const tablaDatos = Object.entries(dayMap).map(([day, info]) => {
     const [year, month, dayOfMonth] = day.split('-').map(Number);
     const dateObj = new Date(year, month - 1, dayOfMonth);
 
@@ -58,16 +56,18 @@ export default function TableUI({ data }: TableUIProps) {
         day: 'numeric',
       });
 
-    const tempActual = temps.temps1[currentHour] ?? '-';
+    const tempActual = info.temps[currentHour] ?? '-';
+    const minTemp = Math.min(...info.temps);
+    const maxTemp = Math.max(...info.temps);
+    const promedio = info.temps.reduce((acc, val) => acc + val, 0) / info.temps.length;
 
     return {
       day,
       displayDay,
-      minTemp1: Math.min(...temps.temps1),
-      maxTemp1: Math.max(...temps.temps1),
-      minTemp2: Math.min(...temps.temps2),
-      maxTemp2: Math.max(...temps.temps2),
       tempActual,
+      minTemp,
+      maxTemp,
+      promedio,
     };
   });
 
@@ -109,8 +109,7 @@ export default function TableUI({ data }: TableUIProps) {
               <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Temp Hora Actual</TableCell>
               <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Temp Min</TableCell>
               <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Temp Max</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Temp Apar Min</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Temp Apar Max</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Temp Promedio</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -125,10 +124,9 @@ export default function TableUI({ data }: TableUIProps) {
               >
                 <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.displayDay}</TableCell>
                 <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.tempActual.toFixed(1)}</TableCell>
-                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.minTemp1}</TableCell>
-                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.maxTemp1}</TableCell>
-                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.minTemp2}</TableCell>
-                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.maxTemp2}</TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.minTemp.toFixed(1)}</TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.maxTemp.toFixed(1)}</TableCell>
+                <TableCell align="center" sx={{ color: '#e0e0e0' }}>{row.promedio.toFixed(1)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
